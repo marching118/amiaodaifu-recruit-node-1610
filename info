@@ -1,0 +1,71 @@
+题目内容
+
+通过发送HTTP请求构造出与服务器一样的树。
+
+基本说明
+1. 所有请求的数据都是json形式
+2. 每次尝试会新生一个新题目（一棵随机的树），如果测试失败或者五分钟内未测试，该题会被删除
+3. 服务器上的树是n叉树，每个节点的存储形式为 {id: 节点ID, children: [该节点的子节点]}，叶子节点的children为[]
+4. 下面的解释中我们假设
+  （1) 此次的题目id为8931bdcd-269a-4abb-957e-0ad09cb8bbb3
+  （2）树的根节点为1
+  （3）生成的树如下
+   {
+     "id": 1,
+     "children": [{
+       "id": 2,
+       "children": [
+         {"id": 5, "children": []},
+         {"id": 6, "children": []}
+       ]
+     }, {
+       "id": 3,
+       "children": [{"id": 7, "children": []}]
+     }]
+   }
+
+步骤
+1. 提交邮箱获得题目ID与根节点ID
+方法：POST
+地址：http://${host}:50000/1610/new-question
+请求内容：{mail: '你的邮箱'}
+返回结果：{id: 题目ID， rootId: 树根节点ID}
+
+例子
+{ id: '8931bdcd-269a-4abb-957e-0ad09cb8bbb3', rootId: 1 }
+
+
+2. 通过多次get-children请求重新构造出树
+方法：GET
+地址：http://${host}:50000/1610/questions/[题目ID]/get-children/[节点ID]
+返回: 包含该节点所有children的id的数组（顺序与树的结构一致）
+
+由第一步获得的根节点ID开始，通过多次调用get-children可以得到树的所有节点，并重新构造出与服务器中一样的树。
+
+例子中的树可以通过如下的6次请求被重新构造出来
+http://${host}:50000/1610/questions/8931bdcd-269a-4abb-957e-0ad09cb8bbb3/get-children/1  => [2, 3]
+http://${host}:50000/1610/questions/8931bdcd-269a-4abb-957e-0ad09cb8bbb3/get-children/2  => [5, 6]
+http://${host}:50000/1610/questions/8931bdcd-269a-4abb-957e-0ad09cb8bbb3/get-children/5  => []
+http://${host}:50000/1610/questions/8931bdcd-269a-4abb-957e-0ad09cb8bbb3/get-children/6  => []
+http://${host}:50000/1610/questions/8931bdcd-269a-4abb-957e-0ad09cb8bbb3/get-children/3  => [7]
+http://${host}:50000/1610/questions/8931bdcd-269a-4abb-957e-0ad09cb8bbb3/get-children/7  => []
+
+3. 通过check检查结果是否正确
+方法：POST
+地址：http://${host}:50000/1610/questions/[题目ID]/check
+请求内容：{root: 构造出的书}
+返回结果：{pass: 是否通过, concurrency: 第二步时的最大并发量, time:总耗时（ms）}
+
+如果root的内容与服务器上的树相等则可能返回
+{ pass: true, concurrency: 4, time: 539 }
+
+4. 如果检查通过，提交源代码和个人联系信息（如果只是娱乐一下，可以不填联系信息）
+方法：POST
+地址：http://${host}:50000/1610/questions/[题目ID]/submit
+请求内容：{name: 你的名字(String), forFun: 是否只是来做题娱乐一下(Boolean), phone: 你的联系电话(String), sourceCode: 源代码(String)}
+返回结果：{ msg: 'thank you!' }
+
+扩展问题
+第2步时对我们的服务器温柔一点，将最大并发量控制为5
+
+通过之后我们会查看你提交的代码，并尽快安排面试。
