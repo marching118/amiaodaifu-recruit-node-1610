@@ -1,7 +1,8 @@
 'use strict';
 
 const uuid = require('uuid'),
-  _ = require('lodash');
+  _ = require('lodash'),
+  db = require('./db');
 
 const questions = {};
 
@@ -54,23 +55,37 @@ function buildQuestion(ip, mail) {
     check: root => {
       question.pass = _.isEqual(question.root, root);
       question.endAt = Date.now();
+      let dbUpdate;
       if (!question.pass) {
         delete question[question.id];
+        dbUpdate = db.attempt.update({pass: false}, {where: {tree: question.id}});
         console.log(`[FAIL] ${mail} (${ip})`);
       } else {
+        dbUpdate = db.attempt.update({
+          pass: true,
+          concurrency: question.cMax,
+          time: question.endAt - question.startAt
+        }, {where: {tree: question.id}});
         console.log(`[SUCCESS] ${mail} (${ip})`);
       }
-      return question.pass;
+      return dbUpdate.then(() => question.pass);
     },
     submit: (data) => {
-      delete question[question.id];
       console.log(`[SUBMIT] ${mail} (${ip})`);
+      delete question[question.id];
+      return db.attempt.update(data, {where: {tree: question.id}});
     }
   };
   questions[question.id] = question;
 
   setTimeout(() => delete question[question.id], 5 * 60 * 1000);
-  return question;
+
+  return db.attempt.create({
+    ip: question.ip,
+    mail: question.mail,
+    tree: question.id
+  })
+    .then(() => question);
 }
 
 function getQuestion(questionId) {

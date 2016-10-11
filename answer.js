@@ -53,7 +53,7 @@ request5({
         method: 'POST',
         url: `http://${host}:50000/1610/questions/${questionId}/submit`,
         json: {
-          name: 'Ma Qin',
+          name: '马骎',
           forFun: false,
           phone: '15900000000',
           sourceCode: require('fs').readFileSync('./answer.js', 'utf-8')

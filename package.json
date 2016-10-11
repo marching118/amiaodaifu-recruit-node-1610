@@ -14,8 +14,10 @@
     "koa-body": "^1.6.0",
     "koa-router": "^5.4.0",
     "lodash": "^4.16.4",
+    "pg": "^6.1.0",
     "request": "^2.75.0",
     "request-promise": "^4.1.1",
+    "sequelize": "^3.24.3",
     "uuid": "^2.0.3"
   }
 }

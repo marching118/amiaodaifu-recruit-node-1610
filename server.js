@@ -21,7 +21,7 @@ router.post('/new-question', function *() {
     return this.body = {error: 'mail needed'};
   }
 
-  const q = question.buildQuestion(this.request.ip, this.request.body.mail);
+  const q = yield question.buildQuestion(this.request.ip, this.request.body.mail);
   this.body = {
     id: q.id,
     rootId: q.root.id
@@ -63,7 +63,11 @@ router.post('/questions/:questionId/check', function *() {
     return this.body = {error: 'root needed'};
   }
 
-  this.body = {pass: q.check(root), concurrency: q.cMax, time: q.endAt - q.startAt};
+  this.body = {
+    pass: yield q.check(root),
+    concurrency: q.cMax,
+    time: q.endAt - q.startAt
+  };
 });
 
 router.post('/questions/:questionId/submit', function *() {
@@ -77,7 +81,18 @@ router.post('/questions/:questionId/submit', function *() {
     return this.body = {error: 'submit before pass'};
   }
 
-  q.submit(this.request.body);
+  const {sourceCode, forFun, name, phone} = this.request.body;
+  if (!sourceCode) {
+    this.status = 400;
+    return this.body = {error: 'no sourceCode'};
+  }
+
+  if (!forFun && !phone) {
+    this.status = 400;
+    return this.body = {error: 'need phone or forFun'};
+  }
+
+  yield q.submit({sourceCode, forFun, name, phone});
   this.body = {
     msg: 'thank you!'
   };
