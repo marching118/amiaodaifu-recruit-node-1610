@@ -4,7 +4,7 @@ const request = require('request-promise'),
   Promise = require('bluebird');
 
 const mail = 'marching118@gmail.com';
-const host = 'localhost';
+const host = '60.205.231.36';
 let questionId;
 
 function buildLimitRequest(n) {

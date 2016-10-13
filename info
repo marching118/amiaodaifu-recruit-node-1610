@@ -27,7 +27,7 @@
 步骤
 1. 提交邮箱获得题目ID与根节点ID
 方法：POST
-地址：http://${host}:50000/1610/new-question
+地址：http://60.205.231.36:50000/1610/new-question
 请求内容：{mail: '你的邮箱'}
 返回结果：{id: 题目ID， rootId: 树根节点ID}
 
@@ -37,22 +37,22 @@
 
 2. 通过多次get-children请求重新构造出树
 方法：GET
-地址：http://${host}:50000/1610/questions/[题目ID]/get-children/[节点ID]
+地址：http://60.205.231.36:50000/1610/questions/[题目ID]/get-children/[节点ID]
 返回: 包含该节点所有children的id的数组（顺序与树的结构一致）
 
 由第一步获得的根节点ID开始，通过多次调用get-children可以得到树的所有节点，并重新构造出与服务器中一样的树。
 
 例子中的树可以通过如下的6次请求被重新构造出来
-http://${host}:50000/1610/questions/8931bdcd-269a-4abb-957e-0ad09cb8bbb3/get-children/1  => [2, 3]
-http://${host}:50000/1610/questions/8931bdcd-269a-4abb-957e-0ad09cb8bbb3/get-children/2  => [5, 6]
-http://${host}:50000/1610/questions/8931bdcd-269a-4abb-957e-0ad09cb8bbb3/get-children/5  => []
-http://${host}:50000/1610/questions/8931bdcd-269a-4abb-957e-0ad09cb8bbb3/get-children/6  => []
-http://${host}:50000/1610/questions/8931bdcd-269a-4abb-957e-0ad09cb8bbb3/get-children/3  => [7]
-http://${host}:50000/1610/questions/8931bdcd-269a-4abb-957e-0ad09cb8bbb3/get-children/7  => []
+http://60.205.231.36:50000/1610/questions/8931bdcd-269a-4abb-957e-0ad09cb8bbb3/get-children/1  => [2, 3]
+http://60.205.231.36:50000/1610/questions/8931bdcd-269a-4abb-957e-0ad09cb8bbb3/get-children/2  => [5, 6]
+http://60.205.231.36:50000/1610/questions/8931bdcd-269a-4abb-957e-0ad09cb8bbb3/get-children/5  => []
+http://60.205.231.36:50000/1610/questions/8931bdcd-269a-4abb-957e-0ad09cb8bbb3/get-children/6  => []
+http://60.205.231.36:50000/1610/questions/8931bdcd-269a-4abb-957e-0ad09cb8bbb3/get-children/3  => [7]
+http://60.205.231.36:50000/1610/questions/8931bdcd-269a-4abb-957e-0ad09cb8bbb3/get-children/7  => []
 
 3. 通过check检查结果是否正确
 方法：POST
-地址：http://${host}:50000/1610/questions/[题目ID]/check
+地址：http://60.205.231.36:50000/1610/questions/[题目ID]/check
 请求内容：{root: 构造出的书}
 返回结果：{pass: 是否通过, concurrency: 第二步时的最大并发量, time:总耗时（ms）}
 
@@ -61,7 +61,7 @@ http://${host}:50000/1610/questions/8931bdcd-269a-4abb-957e-0ad09cb8bbb3/get-chi
 
 4. 如果检查通过，提交源代码和个人联系信息（如果只是娱乐一下，可以不填联系信息）
 方法：POST
-地址：http://${host}:50000/1610/questions/[题目ID]/submit
+地址：http://60.205.231.36:50000/1610/questions/[题目ID]/submit
 请求内容：{name: 你的名字(String), forFun: 是否只是来做题娱乐一下(Boolean), phone: 你的联系电话(String), sourceCode: 源代码(String)}
 返回结果：{ msg: 'thank you!' }
 
