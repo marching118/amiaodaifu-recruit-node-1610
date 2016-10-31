@@ -54,6 +54,16 @@ module.exports = {
     sqlOptions: {
       type: Sequelize.BOOLEAN
     }
+  }, {
+    name: 'root',
+    sqlOptions: {
+      type: Sequelize.JSONB
+    }
+  }, {
+    name: 'answer',
+    sqlOptions: {
+      type: Sequelize.JSONB
+    }
   }],
   autoAddedFields: [],
   associate: (order, models) => {

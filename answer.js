@@ -4,15 +4,15 @@ const request = require('request-promise'),
   Promise = require('bluebird');
 
 const mail = 'marching118@gmail.com';
-const host = '60.205.231.36';
+const host = 'hr.amiaodaifu.com';
 let questionId;
 
-function buildLimitRequest(n) {
+function buildLimitFunction(n, f) {
   let pending = [];
   let running = 0;
 
   function run() {
-    let runPromise = request(...arguments);
+    let runPromise = f(...arguments);
     runPromise.then(() => pending.length ? pending.shift()() : running--);
     return runPromise;
   }
@@ -26,7 +26,7 @@ function buildLimitRequest(n) {
     }
   };
 }
-const request5 = buildLimitRequest(5);
+const request5 = buildLimitFunction(5, request);
 
 request5({
   method: 'POST',

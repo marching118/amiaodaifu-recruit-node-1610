@@ -58,7 +58,7 @@ function buildQuestion(ip, mail) {
       let dbUpdate;
       if (!question.pass) {
         delete question[question.id];
-        dbUpdate = db.attempt.update({pass: false}, {where: {tree: question.id}});
+        dbUpdate = db.attempt.update({pass: false, answer: root}, {where: {tree: question.id}});
         console.log(`[FAIL] ${mail} (${ip})`);
       } else {
         dbUpdate = db.attempt.update({
@@ -83,7 +83,8 @@ function buildQuestion(ip, mail) {
   return db.attempt.create({
     ip: question.ip,
     mail: question.mail,
-    tree: question.id
+    tree: question.id,
+    root: question.root
   })
     .then(() => question);
 }
