@@ -36,7 +36,7 @@ koa，PostgreSQL，redis，RabbitMQ，Elasticsearch，WebRTC， consul， angual
 要是做好了，即使是forFun也请提交代码，招聘结束后我们会把比较好的答案发布出来供大家交流。
 虽然暂时没有漂亮的界面，但我们追求漂亮的js代码。
 
- ### 工作环境
+### 工作环境
 工作地点：北京市朝阳区利泽中一路1号博雅国际中心A座2102
 ![IMG_0097.jpg](https://dn-cnode.qbox.me/FsmIWvYwl6y_ju_ROhF3-WC3K1FI "工作环境")
 新的办公室正在装修，环境大幅提升，明年初可以投入使用。
